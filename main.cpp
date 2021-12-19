@@ -257,12 +257,15 @@ int main(int argc, char **argv)
 	    output << ",\n";
 	    output << "      \"name\": \"" + stu.find(sid)->second + "\",\n";
 	    output << "      \"courses\": [\n";
-	    // output << "      {\n";
-	    // output << "        \"id\": \"" + std::to_string(cid) + "\",\n";
-	    // output << "        \"name\": \"" + cou.find(cid)->second.first + "\",\n";
-	    // output << "        \"teacher\": \"" + cou.find(cid)->second.second + "\",\n";
-	    // output << "        \"courseAverage\": \"" + std::to_string(std::get<2>(csv_to_json[i])) + "\",\n";
-	    // output << "  },\n";
+	}
+	if (sid != std::get<0>(csv_to_json[i]) && i != 0)
+	{
+	    sid = std::get<0>(csv_to_json[i]);
+	    output << "    {\n";
+	    output << "      \"id\": " + std::to_string(sid);
+	    output << ",\n";
+	    output << "      \"name\": \"" + stu.find(sid)->second + "\",\n";
+	    output << "      \"courses\": [\n";
 	}
 	if (sid == std::get<0>(csv_to_json[i]) && sid == std::get<0>(csv_to_json[i + 1]))
 	{
@@ -284,8 +287,8 @@ int main(int argc, char **argv)
 	    output << "          \"courseAverage\": \"" + std::to_string(std::get<2>(csv_to_json[i])) + "\"\n";
 	    output << "        }\n";
 	    output << "      ]\n";
-	    output << "    }";
-	    // sid = std::get<0>(csv_to_json[i + 1]);
+	    output << "    },\n";
+	    sid = std::get<0>(csv_to_json[i + 1]);
 	}
 	// std::cout << std::get<0>(csv_to_json[i]) << " " << std::get<1>(csv_to_json[i]) << " " << std::get<2>(csv_to_json[i]) << std::endl;
     }
