@@ -214,22 +214,16 @@ int main(int argc, char **argv)
 	marks.close();
 	std::vector<std::tuple<int, int, float>> csv_to_json;
 	float sumAvg = 0.00;
-	int cid = std::get<1>(coursesStudentsTook[0]);
+	int cid = tes.find(std::get<1>(coursesStudentsTook[0]))->second.first;
 	int sid = std::get<0>(coursesStudentsTook[0]);
 	for (int i = 0; i < coursesStudentsTook.size(); i++)
 	{
 		// If current course id isn't equal to index course id stop adding and push to csv_to_json vector
-		if (cid != tes.find(std::get<1>(coursesStudentsTook[i]))->second.first)
+		if (cid != tes.find(std::get<1>(coursesStudentsTook[i]))->second.first || sid != std::get<0>(coursesStudentsTook[i]))
 		{
-			csv_to_json.push_back(std::make_tuple(std::get<0>(coursesStudentsTook[i]), cid, sumAvg));
+			csv_to_json.push_back(std::make_tuple(sid, cid, sumAvg));
 			cid = tes.find(std::get<1>(coursesStudentsTook[i]))->second.first;
-			sumAvg = 0.00;
-			sumAvg += std::get<2>(coursesStudentsTook[i]);
-		}
-		else if (sid != std::get<0>(coursesStudentsTook[i]))
-		{
 			sid = std::get<0>(coursesStudentsTook[i]);
-			csv_to_json.push_back(std::make_tuple(std::get<0>(coursesStudentsTook[i]), cid, sumAvg));
 			sumAvg = 0.00;
 			sumAvg += std::get<2>(coursesStudentsTook[i]);
 		}
