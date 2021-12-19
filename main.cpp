@@ -209,38 +209,31 @@ int main(int argc, char **argv)
 				tmp = "";
 			}
 		}
-
-		// Checks to make sure same student is being averaged
-		curr_student_id = student_id;
-		if (student_id == curr_student_id)
+		coursesStudentsTook.push_back(std::make_tuple(student_id, test_id, (mark * ((float)tes.find(test_id)->second.second / 100))));
+	}
+	marks.close();
+	std::vector<std::tuple<int, int, float>> csv_to_json;
+	float sumAvg = 0.00;
+	int cid = std::get<1>(coursesStudentsTook[0]);
+	for (int i = 0; i < coursesStudentsTook.size(); i++)
+	{
+		if (std::get<1>(coursesStudentsTook[i]) == cid)
 		{
-			// std::cout << test_id << " : " << student_id << " : " << mark << std::endl;
-			course_id = tes.find(test_id)->second.first;
-			if (course_id != curr_course_id)
-			{
-				coursesStudentsTook.push_back(std::make_tuple(student_id, course_id, avg));
-				curr_course_id = course_id;
-				avg = 0.00;
-				continue;
-			}
-			avg += (mark * ((float)tes.find(test_id)->second.second / 100));
+			sumAvg += std::get<2>(coursesStudentsTook[i]);
 		}
 		else
 		{
-			// std::cout << test_id << " : " << student_id << " : " << mark << std::endl;
-			// student_id, course_id, avg
-			coursesStudentsTook.push_back(std::make_tuple(student_id, course_id, avg));
-			// will add new line
-			course_id = tes.find(test_id)->second.first;
-			curr_student_id = student_id;
-			avg = 0.00;
-			avg += (mark * ((float)tes.find(test_id)->second.second / 100));
+			csv_to_json.push_back(std::make_tuple(std::get<0>(coursesStudentsTook[i]), std::get<1>(coursesStudentsTook[i - 1]), sumAvg));
+			cid = std::get<1>(coursesStudentsTook[i]);
+			sumAvg = 0.00;
+			sumAvg += std::get<2>(coursesStudentsTook[i]);
 		}
+		// std::cout << std::get<0>(coursesStudentsTook[i]) << " " << std::get<1>(coursesStudentsTook[i]) << " " << std::get<2>(coursesStudentsTook[i]) << std::endl;
 	}
-	marks.close();
-	for (int i = 0; i < coursesStudentsTook.size(); i++)
+	std::cout << std::endl;
+	for (int i = 0; i < csv_to_json.size(); i++)
 	{
-		std::cout << std::get<0>(coursesStudentsTook[i]) << " " << std::get<1>(coursesStudentsTook[i]) << " " << std::get<2>(coursesStudentsTook[i]) << std::endl;
+		std::cout << std::get<0>(csv_to_json[i]) << " " << std::get<1>(csv_to_json[i]) << " " << std::get<2>(csv_to_json[i]) << std::endl;
 	}
 	// Output
 	std::ofstream output(argv[5]);
