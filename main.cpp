@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 #include <map>
+#include <iomanip>
 
 int main(int argc, char **argv)
 {
@@ -151,7 +152,7 @@ int main(int argc, char **argv)
 
 				std::ofstream output(argv[5]);
 				output << "{\n";
-				output << "\t\"error\": \"Invalid Course Weights\"\n";
+				output << "\"error\": \"Invalid Course Weights\"\n";
 				output << "}";
 				output.close();
 				return 0;
@@ -212,6 +213,7 @@ int main(int argc, char **argv)
 		coursesStudentsTook.push_back(std::make_tuple(student_id, test_id, (mark * ((float)tes.find(test_id)->second.second / 100))));
 	}
 	marks.close();
+	// Will append student_id, course_id, and averageCourse grade to vector
 	std::vector<std::tuple<int, int, float>> csv_to_json;
 	float sumAvg = 0.00;
 	int cid = tes.find(std::get<1>(coursesStudentsTook[0]))->second.first;
@@ -231,17 +233,62 @@ int main(int argc, char **argv)
 		{
 			sumAvg += std::get<2>(coursesStudentsTook[i]);
 		}
+		// Was having an issue where all courses were being appended but the last one
+		// this guards against that issue as it will push anything that is left before
+		// loop terminates
+		if (i == coursesStudentsTook.size() - 1)
+		{
+			csv_to_json.push_back(std::make_tuple(sid, cid, sumAvg));
+		}
 	}
-	std::cout << "Future Output: " << std::endl;
-	for (int i = 0; i < csv_to_json.size(); i++)
-	{
-		std::cout << std::get<0>(csv_to_json[i]) << " " << std::get<1>(csv_to_json[i]) << " " << std::get<2>(csv_to_json[i]) << std::endl;
-	}
-	// Output
+
+	// JSON OUTPUT
 	std::ofstream output(argv[5]);
 	output << "{\n";
-	output << "\t\"students\": [\n";
-	output << "\t]\n";
+	output << "  \"students\": [\n";
+	output << "    {\n";
+	cid = std::get<1>(csv_to_json[0]);
+	sid = std::get<0>(csv_to_json[0]);
+	for (int i = 0; i < csv_to_json.size(); i++)
+	{
+		if (sid == std::get<0>(csv_to_json[i]) && i == 0)
+		{
+			output << "      \"id\": " + std::to_string(sid);
+			output << ",\n";
+			output << "      \"name\": \"" + stu.find(sid)->second + "\",\n";
+			output << "      \"courses\": [\n";
+			// output << "      {\n";
+			// output << "        \"id\": \"" + std::to_string(cid) + "\",\n";
+			// output << "        \"name\": \"" + cou.find(cid)->second.first + "\",\n";
+			// output << "        \"teacher\": \"" + cou.find(cid)->second.second + "\",\n";
+			// output << "        \"courseAverage\": \"" + std::to_string(std::get<2>(csv_to_json[i])) + "\",\n";
+			// output << "  },\n";
+		}
+		if (sid == std::get<0>(csv_to_json[i]) && sid == std::get<0>(csv_to_json[i + 1]))
+		{
+			cid = std::get<1>(csv_to_json[i]);
+			output << "        {\n";
+			output << "          \"id\": \"" + std::to_string(cid) + "\",\n";
+			output << "          \"name\": \"" + cou.find(cid)->second.first + "\",\n";
+			output << "          \"teacher\": \"" + cou.find(cid)->second.second + "\",\n";
+			output << "          \"courseAverage\": \"" + std::to_string(std::get<2>(csv_to_json[i])) + "\"\n";
+			output << "        },\n";
+		}
+		if (sid == std::get<0>(csv_to_json[i]) && sid != std::get<0>(csv_to_json[i + 1]))
+		{
+			cid = std::get<1>(csv_to_json[i]);
+			output << "        {\n";
+			output << "          \"id\": \"" + std::to_string(cid) + "\",\n";
+			output << "          \"name\": \"" + cou.find(cid)->second.first + "\",\n";
+			output << "          \"teacher\": \"" + cou.find(cid)->second.second + "\",\n";
+			output << "          \"courseAverage\": \"" + std::to_string(std::get<2>(csv_to_json[i])) + "\"\n";
+			output << "        }\n";
+			output << "      ]";
+			// sid = std::get<0>(csv_to_json[i + 1]);
+		}
+		// std::cout << std::get<0>(csv_to_json[i]) << " " << std::get<1>(csv_to_json[i]) << " " << std::get<2>(csv_to_json[i]) << std::endl;
+	}
+	output << "    \n    }\n";
 	output << "}";
 	output.close();
 }
