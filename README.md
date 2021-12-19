@@ -1,4 +1,4 @@
-#How to use
+###How to use
 Firsly, you will want to compile by typing in the command:
 
 g++ main.cpp
