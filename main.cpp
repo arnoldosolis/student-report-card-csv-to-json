@@ -245,26 +245,31 @@ int main(int argc, char **argv)
 	// Will put student id and average of courses taken into map
 	std::map<int, float> totalAverage;
 	float totalAvg = 0.00;
-	int coursesCount = 0;
+	float coursesCount = 0;
 	sid = std::get<0>(csv_to_json[0]);
 	for (int i = 0; i < csv_to_json.size(); i++)
 	{
-		if (sid == std::get<0>(csv_to_json[i]))
+		if (sid != std::get<0>(csv_to_json[i]))
 		{
-			totalAvg += std::get<2>(csv_to_json[i]);
-			coursesCount++;
-		}
-		else
-		{
-			std::cout << totalAvg << std::endl;
 			totalAvg /= coursesCount;
+			std::cout << sid << " " << totalAvg << std::endl;
+			totalAverage.insert(std::pair<int, float>(sid, totalAvg));
+			sid = std::get<0>(csv_to_json[i]);
+			totalAvg = 0.00;
+			coursesCount = 0;
+		}
+		totalAvg += std::get<2>(csv_to_json[i]);
+		coursesCount++;
+		if (i == csv_to_json.size() - 1)
+		{
+			totalAvg /= coursesCount;
+			std::cout << sid << " " << totalAvg << std::endl;
 			totalAverage.insert(std::pair<int, float>(sid, totalAvg));
 			sid = std::get<0>(csv_to_json[i]);
 			totalAvg = 0.00;
 			coursesCount = 0;
 		}
 	}
-	totalAverage.insert(std::pair<int, float>(sid, totalAvg));
 
 	// JSON OUTPUT
 	std::ofstream output(argv[5]);
