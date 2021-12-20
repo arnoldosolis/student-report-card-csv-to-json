@@ -277,6 +277,7 @@ int main(int argc, char **argv)
 			output << "      \"id\": " + std::to_string(sid);
 			output << ",\n";
 			output << "      \"name\": \"" + stu.find(sid)->second + "\",\n";
+			output << "      \"totalAverage\": " + std::to_string(totalAverage.find(sid)->second) + ",\n";
 			output << "      \"courses\": [\n";
 		}
 		if (sid != std::get<0>(csv_to_json[i]) && i != 0)
