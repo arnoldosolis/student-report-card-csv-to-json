@@ -252,7 +252,6 @@ int main(int argc, char **argv)
 		if (sid != std::get<0>(csv_to_json[i]))
 		{
 			totalAvg /= coursesCount;
-			std::cout << sid << " " << totalAvg << std::endl;
 			totalAverage.insert(std::pair<int, float>(sid, totalAvg));
 			sid = std::get<0>(csv_to_json[i]);
 			totalAvg = 0.00;
@@ -263,7 +262,6 @@ int main(int argc, char **argv)
 		if (i == csv_to_json.size() - 1)
 		{
 			totalAvg /= coursesCount;
-			std::cout << sid << " " << totalAvg << std::endl;
 			totalAverage.insert(std::pair<int, float>(sid, totalAvg));
 			sid = std::get<0>(csv_to_json[i]);
 			totalAvg = 0.00;
