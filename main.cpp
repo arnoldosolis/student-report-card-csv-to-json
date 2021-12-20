@@ -256,12 +256,15 @@ int main(int argc, char **argv)
 		}
 		else
 		{
+			std::cout << totalAvg << std::endl;
 			totalAvg /= coursesCount;
 			totalAverage.insert(std::pair<int, float>(sid, totalAvg));
+			sid = std::get<0>(csv_to_json[i]);
 			totalAvg = 0.00;
 			coursesCount = 0;
 		}
 	}
+	totalAverage.insert(std::pair<int, float>(sid, totalAvg));
 
 	// JSON OUTPUT
 	std::ofstream output(argv[5]);
@@ -281,9 +284,8 @@ int main(int argc, char **argv)
 			output << "      \"totalAverage\": " + std::to_string(totalAverage.find(sid)->second) + ",\n";
 			output << "      \"courses\": [\n";
 		}
-		if (sid != std::get<0>(csv_to_json[i]) && i != 0)
+		if (sid != std::get<0>(csv_to_json[i]))
 		{
-			std::cout << "here" << std::endl;
 			sid = std::get<0>(csv_to_json[i]);
 			output << "    {\n";
 			output << "      \"id\": " + std::to_string(sid);
@@ -300,7 +302,7 @@ int main(int argc, char **argv)
 			output << "          \"id\": " + std::to_string(cid) + ",\n";
 			output << "          \"name\": \"" + cou.find(cid)->second.first + "\",\n";
 			output << "          \"teacher\": \"" + cou.find(cid)->second.second + "\",\n";
-			output << "          \"courseAverage\": " + std::to_string(std::get<2>(csv_to_json[i])) + ",\n";
+			output << "          \"courseAverage\": " + std::to_string(std::get<2>(csv_to_json[i])) + "\n";
 			output << "        },\n";
 		}
 		// Will print final course student took without trailling comma
@@ -311,11 +313,10 @@ int main(int argc, char **argv)
 			output << "          \"id\": " + std::to_string(cid) + ",\n";
 			output << "          \"name\": \"" + cou.find(cid)->second.first + "\",\n";
 			output << "          \"teacher\": \"" + cou.find(cid)->second.second + "\",\n";
-			output << "          \"courseAverage\": " + std::to_string(std::get<2>(csv_to_json[i])) + ",\n";
+			output << "          \"courseAverage\": " + std::to_string(std::get<2>(csv_to_json[i])) + "\n";
 			output << "        }\n";
 			output << "      ]\n";
 			output << "    },\n";
-			sid = std::get<0>(csv_to_json[i + 1]);
 		}
 		// std::cout << std::get<0>(csv_to_json[i]) << " " << std::get<1>(csv_to_json[i]) << " " << std::get<2>(csv_to_json[i]) << std::endl;
 	}
