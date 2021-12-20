@@ -134,6 +134,7 @@ int main(int argc, char **argv)
 		}
 	}
 	tests.close();
+
 	// Keeps track of unique test_id in order to sum the weight correctly
 	int t = tes.begin()->second.first;
 	int sum = 0;
@@ -149,7 +150,6 @@ int main(int argc, char **argv)
 		{
 			if (sum != 100)
 			{
-
 				std::ofstream output(argv[5]);
 				output << "{\n";
 				output << "\"error\": \"Invalid Course Weights\"\n";
@@ -164,6 +164,7 @@ int main(int argc, char **argv)
 	}
 
 	// Reads in marks
+	// Skips first line
 	marks >> line;
 	// int is student id, pair is course_id, average
 	// std::map<int, std::pair<int, float>> courseAverage;
@@ -213,6 +214,7 @@ int main(int argc, char **argv)
 		coursesStudentsTook.push_back(std::make_tuple(student_id, test_id, (mark * ((float)tes.find(test_id)->second.second / 100))));
 	}
 	marks.close();
+
 	// Will append student_id, course_id, and averageCourse grade to vector
 	std::vector<std::tuple<int, int, float>> csv_to_json;
 	float sumAvg = 0.00;
@@ -321,7 +323,6 @@ int main(int argc, char **argv)
 			output << "      ]\n";
 			output << "    },\n";
 		}
-		// std::cout << std::get<0>(csv_to_json[i]) << " " << std::get<1>(csv_to_json[i]) << " " << std::get<2>(csv_to_json[i]) << std::endl;
 	}
 	output << "    \n  ]\n";
 	output << "}";
