@@ -271,6 +271,7 @@ int main(int argc, char **argv)
 	sid = std::get<0>(csv_to_json[0]);
 	for (int i = 0; i < csv_to_json.size(); i++)
 	{
+		// Will print student
 		if (sid == std::get<0>(csv_to_json[i]) && i == 0)
 		{
 			output << "    {\n";
@@ -282,6 +283,7 @@ int main(int argc, char **argv)
 		}
 		if (sid != std::get<0>(csv_to_json[i]) && i != 0)
 		{
+			std::cout << "here" << std::endl;
 			sid = std::get<0>(csv_to_json[i]);
 			output << "    {\n";
 			output << "      \"id\": " + std::to_string(sid);
@@ -290,6 +292,7 @@ int main(int argc, char **argv)
 			output << "      \"totalAverage\": " + std::to_string(totalAverage.find(sid)->second) + ",\n";
 			output << "      \"courses\": [\n";
 		}
+		// Will print course student took with comma
 		if (sid == std::get<0>(csv_to_json[i]) && sid == std::get<0>(csv_to_json[i + 1]))
 		{
 			cid = std::get<1>(csv_to_json[i]);
@@ -300,6 +303,7 @@ int main(int argc, char **argv)
 			output << "          \"courseAverage\": " + std::to_string(std::get<2>(csv_to_json[i])) + ",\n";
 			output << "        },\n";
 		}
+		// Will print final course student took without trailling comma
 		if (sid == std::get<0>(csv_to_json[i]) && sid != std::get<0>(csv_to_json[i + 1]))
 		{
 			cid = std::get<1>(csv_to_json[i]);
